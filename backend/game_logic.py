@@ -1,13 +1,5 @@
 from random import randint
 
-trench = {
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0
-}
 
 class JetData:
     def __init__(self):
@@ -25,7 +17,20 @@ class JetData:
         return self.prices
 
 def start_game():
-    return {"money": 2_000, "debt": 5_000, "loc": "the Bronx"}
+    return {
+        "money": 2_000, 
+        "debt": 5_000, 
+        "loc": 0,
+        "locs": ["the Bronx", "Queens", "Central Park", "Manhattan", "Coney Island", "Brooklyn"],
+        "trench": {
+            "cocaine": 0,
+            "heroin": 0,
+            "acid": 0,
+            "shrooms": 0,
+            "adderall": 0,
+            "weed": 0
+        }
+    }
 
 def jet(game_state, money, debt, loc):
     jet_data = JetData()
