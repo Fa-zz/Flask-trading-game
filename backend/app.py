@@ -36,6 +36,17 @@ def jet():
     games[game_id] = game_logic.jet(games[game_id], money, debt, loc)
     return jsonify(games[game_id])
 
+@app.route('/buy', methods=['POST'])
+def buy():
+    game_data = request.get_json()
+    print(game_data)
+
+    # Check if the game ID exists
+    if game_data['game_id'] not in games:
+        return jsonify({'error': 'Game not found'}), 404
+
+    games[game_data['game_id']] = game_logic.buy(game_data)
+    return jsonify(game_data)
 """
 @app.route('/take_turn', methods=['POST'])
 def take_turn():
