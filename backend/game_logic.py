@@ -1,15 +1,14 @@
 from random import randint
 
-
 class JetData:
     def __init__(self):
         self.prices = {
-            "cocaine": randint(15000, 29999), # cocaine
-            "heroin": randint(5000, 13999), # heroin
-            "acid": randint(1000, 4999), # acid
-            "shrooms": randint(300, 899), # shrooms
-            "adderall": randint(90, 249), # adderall
-            "weed": randint(10, 89) # weed
+            "item1": randint(15000, 29999), # cocaine
+            "item2": randint(5000, 13999), # heroin
+            "item3": randint(1000, 4999), # acid
+            "item4": randint(300, 899), # shrooms
+            "item5": randint(90, 249), # adderall
+            "item6": randint(10, 89) # weed
         }
     
     def get_prices(self):
@@ -21,32 +20,32 @@ def start_game():
         "money": 2_000, 
         "debt": 5_000, 
         "loc": 0,
-        "locs": ["the Bronx", "Queens", "Central Park", "Manhattan", "Coney Island", "Brooklyn"],
-        "drugs_arr": ["cocaine","heroin","acid","shrooms","adderall","weed"],
+        "locs": ["1", "2", "3", "4", "5", "6"],
+        "item_arr": ["item1","item2","item3","item4","item5","item6"],
         "trench": {
-            "cocaine": 0,
-            "heroin": 0,
-            "acid": 0,
-            "shrooms": 0,
-            "adderall": 0,
-            "weed": 0
+            "item1": 0,
+            "item2": 0,
+            "item3": 0,
+            "item4": 0,
+            "item5": 0,
+            "item6": 0
         },
-        "shopping_cart": []
+        "shopping_cart": [],
+        "transac_hist": {}
     }
 
-def jet(game_state, money, debt, loc):
-    jet_data = JetData()
-    game_state["debt"] = debt
+def jet(game_state, loc):
     game_state["loc"] = loc
-    game_state["money"] = money
+    jet_data = JetData()
     game_state["jet_data"] = jet_data.get_prices()
     return game_state
 
 def buy(game_state):
     cart = game_state["shopping_cart"]
-    str_buying = game_state["drugs_arr"][game_state["shopping_cart"][0]]
+    str_buying = game_state["item_arr"][game_state["shopping_cart"][0]]
     total = game_state["jet_data"][str_buying] * cart[1] # calc total to buy. price * amount
     game_state["money"] -= total # subtract total from money
     game_state["trench"][str_buying] = cart[1] # update trench with amt bought
     game_state["shopping_cart"] = [] # clear cart
+    print(f"\n{game_state}")
     return game_state

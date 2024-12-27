@@ -13,7 +13,7 @@ def create_state(id):
     state["game_id"] = id
     return state
 
-@app.route('/start_game', methods=['POST'])
+@app.route('/start_game', methods=['GET'])
 def start_game():
     game_id = len(games)+1
     games[game_id] = create_state(game_id)
@@ -23,17 +23,14 @@ def start_game():
 @app.route('/jet', methods=['POST'])
 def jet():
     data = request.get_json()
-    game_id = data.get('game_id')
-    money = data.get('money')
-    debt = data.get('debt')
-    loc = data.get('loc')
-    print(f"/jet, {loc}, {money}, {debt}")
+    game_id = data['game_id']
+    loc = data['loc']
 
-    # Check if the game ID exists
+    #Check if the game ID exists
     if game_id not in games:
         return jsonify({'error': 'Game not found'}), 404
     
-    games[game_id] = game_logic.jet(games[game_id], money, debt, loc)
+    games[game_id] = game_logic.jet(games[game_id], loc)
     return jsonify(games[game_id])
 
 @app.route('/buy', methods=['POST'])
