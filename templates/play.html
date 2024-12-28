@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}{{ state.locs[state.loc] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <p>"Hey dude, here's the prices"</p>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!doctype html>
+<header>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Post-Nuclear Trading Game </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  
+</header>
+
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    <body>
+        {% block content %}{% endblock %}
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>  
+    </body>
+</section>

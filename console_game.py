@@ -6,11 +6,11 @@ from game_state import GameState
 
 def make_request(endpoint, data):
     if endpoint == "start_game":
-        r = requests.get("http://127.0.0.1:5000/start_game", json=data)
+        r = requests.get("http://127.0.0.1:5000/api/start_game", json=data)
     elif endpoint == "jet":
-        r = requests.post("http://127.0.0.1:5000/jet", json=data)
+        r = requests.post("http://127.0.0.1:5000/api/jet", json=data)
     elif endpoint == "buy":
-        r = requests.post("http://127.0.0.1:5000/buy", json=data)
+        r = requests.post("http://127.0.0.1:5000/api/buy", json=data)
     return r.json()
 
 def clear_screen():

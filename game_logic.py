@@ -3,12 +3,12 @@ from random import randint
 class JetData:
     def __init__(self):
         self.prices = {
-            "item1": randint(15000, 29999), # cocaine
-            "item2": randint(5000, 13999), # heroin
-            "item3": randint(1000, 4999), # acid
-            "item4": randint(300, 899), # shrooms
-            "item5": randint(90, 249), # adderall
-            "item6": randint(10, 89) # weed
+            "item1": randint(15000, 29999),
+            "item2": randint(5000, 13999),
+            "item3": randint(1000, 4999),
+            "item4": randint(300, 899),
+            "item5": randint(90, 249),
+            "item6": randint(10, 89)
         }
     
     def get_prices(self):
@@ -20,8 +20,8 @@ def start_game():
         "money": 2_000, 
         "debt": 5_000, 
         "loc": 0,
-        "locs": ["1", "2", "3", "4", "5", "6"],
-        "item_arr": ["item1","item2","item3","item4","item5","item6"],
+        "locs": ["Badsprings", "Prim City", "Pipton", "The Wasteland", "Hooper Dam", "New Venturas"],
+        "item_arr": ["Scrap metal","Scrap electronics","Bullets","Cigarettes","Stimpaks","Purified water"],
         "trench": {
             "item1": 0,
             "item2": 0,

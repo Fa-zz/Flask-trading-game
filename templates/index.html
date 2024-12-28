@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <p>Welcome to the Post-Nuclear Trading Game. Click "Start New Game" to start a new game.</p>
+    <button class="button" id="play-button">Start New Game</button>  
+  </div>
+{% endblock %}

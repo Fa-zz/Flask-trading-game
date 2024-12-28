@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 import random
 import game_logic
 
@@ -13,14 +13,25 @@ def create_state(id):
     state["game_id"] = id
     return state
 
-@app.route('/start_game', methods=['GET'])
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+@app.route('/play')
+def play():
+    if 'game_id' not in session:
+        return redirect(url_for('index'))  # Redirect to home if no game is active
+    return render_template("play.html", state=games[session['game_id']])
+
+@app.route('/api/start_game', methods=['GET'])
 def start_game():
     game_id = len(games)+1
     games[game_id] = create_state(game_id)
+    session['game_id'] = game_id
     print(f"Game started with id: {game_id}")
     return jsonify(games[game_id])
 
-@app.route('/jet', methods=['POST'])
+@app.route('/api/jet', methods=['POST'])
 def jet():
     data = request.get_json()
     game_id = data['game_id']
@@ -33,7 +44,7 @@ def jet():
     games[game_id] = game_logic.jet(games[game_id], loc)
     return jsonify(games[game_id])
 
-@app.route('/buy', methods=['POST'])
+@app.route('/api/buy', methods=['POST'])
 def buy():
     game_data = request.get_json()
     print(game_data)
