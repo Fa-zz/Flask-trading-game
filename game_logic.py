@@ -3,12 +3,12 @@ from random import randint
 class JetData:
     def __init__(self):
         self.prices = {
-            "item1": randint(15000, 29999),
-            "item2": randint(5000, 13999),
-            "item3": randint(1000, 4999),
-            "item4": randint(300, 899),
-            "item5": randint(90, 249),
-            "item6": randint(10, 89)
+            "Purified water": randint(15000, 29999),
+            "Stimpaks": randint(5000, 13999),
+            "Cigarettes": randint(1000, 4999),
+            "Bullets": randint(300, 899),
+            "Scrap electronics": randint(90, 249),
+            "Scrap metal": randint(10, 89)
         }
     
     def get_prices(self):
@@ -31,7 +31,8 @@ def start_game():
             "item6": 0
         },
         "shopping_cart": [],
-        "transac_hist": {}
+        "transac_hist": {},
+        "alert_messages": []
     }
 
 def jet(game_state, loc):

@@ -21,7 +21,9 @@ def index():
 def play():
     if 'game_id' not in session:
         return redirect(url_for('index'))  # Redirect to home if no game is active
-    return render_template("play.html", state=games[session['game_id']])
+    state = games[session['game_id']]
+    state['alert_messages'].append(f"You jet to { state['locs'][state['loc']] }")
+    return render_template("play.html", state=state)
 
 @app.route('/api/start_game', methods=['GET'])
 def start_game():

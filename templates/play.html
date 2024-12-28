@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}{{ state.locs[state.loc] }}{% endblock %}</h1>
+    <script>
+        const alertMessages = {{ state['alert_messages'] | tojson }};
+
+        // Iterate over the array and display alerts
+        for (let i = 0; i < alertMessages.length; i++) {
+            alert(alertMessages[i]);
+        }
+    </script>
+    <h1>{% block title %}{{ state.locs[state.loc] }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <p>"Hey dude, here's the prices"</p>
-  </div>
+    <div class="container">
+        <p>"Hey dude, here's the prices"</p>
+        <ul class="item-list">
+            {% for key, value in state.jet_data.items() %}
+            <li class="item-row">
+                <div class="item-info">
+                    <h2 class="item-name">{{ key }}</h2>
+                    <p class="item-price">{{ value }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
