@@ -22,6 +22,11 @@
                     <h2 class="item-name">{{ key }}</h2>
                     <p class="item-price">{{ value }}</p>
                 </div>
+                <form class="buy-form">
+                    <input type="hidden" name="item-id" value="{{ key }}">
+                    <input type="number" name="buy-amt" class="buy-amt" value="0" min="0">
+                    <button class="buy-button" id="buy-button" type="button">Buy</button>
+                </form>
             </li>
             {% endfor %}
         </ul>

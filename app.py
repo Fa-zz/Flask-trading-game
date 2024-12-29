@@ -48,15 +48,19 @@ def jet():
 
 @app.route('/api/buy', methods=['POST'])
 def buy():
-    game_data = request.get_json()
-    print(game_data)
+    buy_data = request.get_json()
+    print(buy_data)
+
+    game_id = session['game_id']
+    state = games[session['game_id']]
+    state["shopping_cart"] = buy_data
 
     # Check if the game ID exists
-    if game_data['game_id'] not in games:
+    if game_id not in games:
         return jsonify({'error': 'Game not found'}), 404
 
-    games[game_data['game_id']] = game_logic.buy(game_data)
-    return jsonify(game_data)
+    state = game_logic.buy(state)
+    return jsonify(state)
 """
 @app.route('/take_turn', methods=['POST'])
 def take_turn():

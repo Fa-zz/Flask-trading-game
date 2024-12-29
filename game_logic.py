@@ -22,15 +22,15 @@ def start_game():
         "loc": 0,
         "locs": ["Badsprings", "Prim City", "Pipton", "The Wasteland", "Hooper Dam", "New Venturas"],
         "item_arr": ["Scrap metal","Scrap electronics","Bullets","Cigarettes","Stimpaks","Purified water"],
-        "trench": {
-            "item1": 0,
-            "item2": 0,
-            "item3": 0,
-            "item4": 0,
-            "item5": 0,
-            "item6": 0
+        "trench": {                 # TODO: Combine trench and price dictionaries
+            "Purified water": 0,
+            "Stimpaks": 0,
+            "Cigarettes": 0,
+            "Bullets": 0,
+            "Scrap electronics": 0,
+            "Scrap metal": 0
         },
-        "shopping_cart": [],
+        "shopping_cart": {},
         "transac_hist": {},
         "alert_messages": []
     }
@@ -41,12 +41,10 @@ def jet(game_state, loc):
     game_state["jet_data"] = jet_data.get_prices()
     return game_state
 
-def buy(game_state):
-    cart = game_state["shopping_cart"]
-    str_buying = game_state["item_arr"][game_state["shopping_cart"][0]]
-    total = game_state["jet_data"][str_buying] * cart[1] # calc total to buy. price * amount
-    game_state["money"] -= total # subtract total from money
-    game_state["trench"][str_buying] = cart[1] # update trench with amt bought
-    game_state["shopping_cart"] = [] # clear cart
-    print(f"\n{game_state}")
-    return game_state
+def buy(state):
+    str_buying = state["shopping_cart"]["item_id"] # Str of bought item
+    price = state["jet_data"][str_buying] # Price of bought item
+    total = price * state["shopping_cart"]["buy_amount"] # Total = price * amount
+    state["money"] -= total # Subtract total from money
+    state["trench"][str_buying] += state["shopping_cart"]["buy_amount"] # Update trench with amount bought
+    return state
