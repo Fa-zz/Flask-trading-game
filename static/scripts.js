@@ -1,3 +1,11 @@
+// Function for formatting money
+function formatMoney(amount) {
+    return "$" + Number(amount).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    });
+}
+
 // Function to make the GET request to /api/start_game
 async function fetchStartGame() {
     const response = await fetch('/api/start_game');
@@ -78,6 +86,7 @@ async function handleBuyButtonClick(event) {
 
         const result = await response.json();
         console.log(result)
+        document.getElementById("user-money").innerHTML = "You have " + formatMoney(result.money) + " on hand.";
         alert(`You bought ${payload.buy_amount} ${payload.item_id}`);
     } catch (error) {
         console.error('Error during the buy operation:', error);

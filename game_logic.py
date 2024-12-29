@@ -20,7 +20,7 @@ def start_game():
         "money": 2_000, 
         "debt": 5_000, 
         "loc": 0,
-        "locs": ["Badsprings", "Prim City", "Pipton", "The Wasteland", "Hooper Dam", "New Venturas"],
+        "locs": ["Badsprings City", "Prim City", "Vault 19", "The Wasteland", "Hooper Dam", "New Venturas"],
         "item_arr": ["Scrap metal","Scrap electronics","Bullets","Cigarettes","Stimpaks","Purified water"],
         "trench": {                 # TODO: Combine trench and price dictionaries
             "Purified water": 0,
