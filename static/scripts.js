@@ -1,6 +1,6 @@
 // Function for formatting money
 function formatMoney(amount) {
-    return "$" + Number(amount).toLocaleString('en-US', {
+    return Number(amount).toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
     });
@@ -86,11 +86,40 @@ async function handleBuyButtonClick(event) {
 
         const result = await response.json();
         console.log(result)
-        document.getElementById("user-money").innerHTML = "You have " + formatMoney(result.money) + " on hand.";
+        document.getElementById("user-money").innerHTML = formatMoney(result.money);
         alert(`You bought ${payload.buy_amount} ${payload.item_id}`);
     } catch (error) {
         console.error('Error during the buy operation:', error);
         alert('Failed to buy item. Please try again.');
+    }
+}
+
+// Function to handle the changing the view
+async function handleViewButtonClick(event) {
+    const buttonText = event.target.textContent.trim();
+
+    try {
+        // Send an asynchronous POST request to /api/change_view
+        const response = await fetch('/api/change_view', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                view: buttonText
+            })
+        });
+
+        // Check if the request was successful
+        if (response.ok) {
+            const data = await response.json();
+            console.log('View changed successfully:', data);
+            location.reload();
+        } else {
+            console.error('Error changing view:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Network error:', error);
     }
 }
 
@@ -105,5 +134,13 @@ const buyButtons = document.querySelectorAll('.buy-button');
 if (buyButtons) {
     buyButtons.forEach(button => {
         button.addEventListener('click', handleBuyButtonClick);
+    });
+}
+
+// Event listener for each main view button
+const mainViewButtons = document.querySelectorAll('.view-button');
+if (mainViewButtons) {
+    mainViewButtons.forEach(button => {
+        button.addEventListener('click', handleViewButtonClick);
     });
 }

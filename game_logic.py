@@ -32,7 +32,8 @@ def start_game():
         },
         "shopping_cart": {},
         "transac_hist": {},
-        "alert_messages": []
+        "alert_messages": [],
+        "main_view": "marketplace"
     }
 
 def jet(game_state, loc):
