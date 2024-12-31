@@ -53,20 +53,24 @@ def jet():
     else:
         return jsonify({"status": "error", "message": "location data missing or invalid"}), 400
 
-@app.route('/api/buy', methods=['POST'])
-def buy():
-    buy_data = request.get_json()
+@app.route('/api/transaction', methods=['POST'])
+def transaction():
+    transac_data = request.get_json()
     state, game_id = get_state_and_id()
 
-    if buy_data is not None:
+    if transac_data is not None:
         # Check if the game ID exists
         if game_id not in games:
             return jsonify({'error': 'Game not found'}), 404
-        state["shopping_cart"] = buy_data
-        state = game_logic.buy(state)
-        return jsonify({"status": "success", "money": state["money"]}), 200
+        
+        state["shopping_cart"] = transac_data
+        # Error case - user cannot sell an item for more than they own
+        if not(state["shopping_cart"]["buy"]) and (state["shopping_cart"]["amount"] > state["trench"][state["shopping_cart"]["item_name"]]):
+            return jsonify({"status": "error", "message": "transaction data invalid or missing"}), 400
+        state = game_logic.transaction(state)
+        return jsonify({"status": "success", "money": state["money"], "trench": state["trench"], "item_arr": state["item_arr"]}), 200
     else:
-        return jsonify({"status": "error", "message": "issue with buy"}), 400
+        return jsonify({"status": "error", "message": "transaction data invalid or missing"}), 400
 
 @app.route('/api/change_view', methods=['POST'])
 def change_view():

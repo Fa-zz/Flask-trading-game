@@ -51,6 +51,11 @@ h1 {
     margin-right: 15px;
 }
 
+.barter-img {
+    display: block;
+    margin: 0 auto;
+}
+
 .item-info {
     flex: 1;
 }

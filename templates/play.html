@@ -24,16 +24,17 @@
                 You have <span id="user-money" class="user-money">{{ state.money }}</span> on hand. You are <span class="user-debt">{{ state.debt }}</span> in debt.
             </p>
             <p>"Hey dude, here's the prices"</p>
+            <img class="barter-img" src="{{url_for('static', filename='barter.png')}}" />
             <ul class="item-list">
                 {% for key, value in state.jet_data.items() %}
                 <li class="item-row">
                     <div class="item-info">
                         <h2 class="item-name">{{ key }} • <span class="item-price">{{ value }}</span></h2>
-                        <p>Owned: {{ state.trench[key] | default(0) }}. You can buy a max of 5</p>
+                        <p>Owned: <span class="owned-amt">{{ state.trench[key] | default(0) }}</span>. You can buy a max of 5</p>
                     </div>
                     <form class="buy-form">
-                        <input type="hidden" name="item-id" value="{{ key }}">
-                        <input type="number" name="buy-amt" class="buy-amt" value="0" min="0">
+                        <input type="hidden" name="item-name" value="{{ key }}">
+                        <input type="number" name="amt" class="buy-amt" value="0" min="0">
                         <button class="buy-button" id="buy-button" type="button">Buy</button>
                         <button class="buy-button" id="buy-button" type="button">Sell</button>
                     </form>

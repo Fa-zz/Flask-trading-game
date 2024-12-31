@@ -42,10 +42,16 @@ def jet(game_state, loc):
     game_state["jet_data"] = jet_data.get_prices()
     return game_state
 
-def buy(state):
-    str_buying = state["shopping_cart"]["item_id"] # Str of bought item
+def transaction(state):
+    print(f"Transaction state: {state}")
+    str_buying = state["shopping_cart"]["item_name"] # Str of bought item
     price = state["jet_data"][str_buying] # Price of bought item
-    total = price * state["shopping_cart"]["buy_amount"] # Total = price * amount
-    state["money"] -= total # Subtract total from money
-    state["trench"][str_buying] += state["shopping_cart"]["buy_amount"] # Update trench with amount bought
+    total = price * state["shopping_cart"]["amount"] # Total = price * amount
+
+    if state["shopping_cart"]["buy"] == True:
+        state["money"] -= total # Player gives up money to acquire
+        state["trench"][str_buying] += state["shopping_cart"]["amount"] # Update trench with amount bought
+    elif state["shopping_cart"]["buy"] == False:
+        state["money"] += total # Player gives up money to part with
+        state["trench"][str_buying] -= state["shopping_cart"]["amount"]
     return state

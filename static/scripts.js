@@ -52,27 +52,41 @@ async function handlePlayButtonClick() {
 async function handleBuyButtonClick(event) {
     // Get the clicked button and its parent form
     const buttonElement = event.target;
+    const buttonText = event.target.textContent.trim();
     const form = buttonElement.closest('.buy-form');
 
     // Extract the item ID and buy amount from the form
-    const itemId = form.querySelector('input[name="item-id"]').value;
-    const buyAmount = form.querySelector('input[name="buy-amt"]').value;
+    const itemName = form.querySelector('input[name="item-name"]').value;
+    const amount = form.querySelector('input[name="amt"]').value;
 
     // Validate the input
-    if (buyAmount <= 0) {
+    if (amount <= 0) {
         alert('Please enter a valid amount to buy.');
         return;
     }
 
     // Construct the POST request payload
-    const payload = {
-        item_id: itemId,
-        buy_amount: parseInt(buyAmount, 10),
-    };
-
+    let payload = NaN;
+    let operation = NaN;
+    if (buttonText == "Buy") {
+        payload = {
+            item_name: itemName,
+            amount: parseInt(amount, 10),
+            buy: true
+        };
+        operation = "bought";
+    } else if (buttonText == "Sell") {
+        payload = {
+            item_name: itemName,
+            amount: parseInt(amount, 10),
+            buy: false
+        };
+        operation = "sold";
+    }
+    console.log("Transaction payload: " + payload.item_name + " " + payload.amount + " " + payload.buy);
     try {
         // Send data to /api/buy (POST request)
-        const response = await fetch('/api/buy', {
+        const response = await fetch('/api/transaction', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,11 +100,21 @@ async function handleBuyButtonClick(event) {
 
         const result = await response.json();
         console.log(result)
+        // Update owned values
+        const ownedAmounts = document.querySelectorAll('.owned-amt');
+        ownedAmounts.forEach((span) => {
+            const form = span.closest('.item-row').querySelector('input[name="item-name"]');
+            const itemName = form.value;
+            span.textContent = result.trench[itemName] || 0;
+        });
+        // Update user money
         document.getElementById("user-money").innerHTML = formatMoney(result.money);
-        alert(`You bought ${payload.buy_amount} ${payload.item_id}`);
+        form.reset();
+        alert(`You ` + operation + ` ${payload.amount} ${payload.item_name}`);
     } catch (error) {
         console.error('Error during the buy operation:', error);
         alert('Failed to buy item. Please try again.');
+        form.reset();
     }
 }
 
