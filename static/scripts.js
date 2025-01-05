@@ -55,13 +55,14 @@ async function handleBuyButtonClick(event) {
     const buttonText = event.target.textContent.trim();
     const form = buttonElement.closest('.buy-form');
 
-    // Extract the item ID and buy amount from the form
+    // Extract the item ID, amount, and max buy val from the form
     const itemName = form.querySelector('input[name="item-name"]').value;
     const amount = form.querySelector('input[name="amt"]').value;
+    const maxVal = form.querySelector('input[name="max-buy"]').value;
 
     // Validate the input
-    if (amount <= 0) {
-        alert('Please enter a valid amount to buy.');
+    if (amount <= 0 || (buttonText == "Buy" && amount > maxVal)) {
+        alert('Enter a valid amount for the transaction.');
         return;
     }
 
@@ -85,7 +86,7 @@ async function handleBuyButtonClick(event) {
     }
     console.log("Transaction payload: " + payload.item_name + " " + payload.amount + " " + payload.buy);
     try {
-        // Send data to /api/buy (POST request)
+        // Send data to /api/transaction (POST request)
         const response = await fetch('/api/transaction', {
             method: 'POST',
             headers: {
@@ -97,7 +98,7 @@ async function handleBuyButtonClick(event) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+        // Get result
         const result = await response.json();
         console.log(result)
         // Update owned values
@@ -107,6 +108,15 @@ async function handleBuyButtonClick(event) {
             const itemName = form.value;
             span.textContent = result.trench[itemName] || 0;
         });
+        // Update max vals
+        const maxVals = document.querySelectorAll('.max-val');
+        maxVals.forEach((span) => {
+            const form = span.closest('.item-row').querySelector('input[name="item-name"]');
+            const itemName = form.value;
+            span.textContent = result.jet_data[itemName][1] || 0;
+        })
+        // Update user trench space
+        document.getElementById("trench-space").innerHTML = result.trench.space
         // Update user money
         document.getElementById("user-money").innerHTML = formatMoney(result.money);
         form.reset();

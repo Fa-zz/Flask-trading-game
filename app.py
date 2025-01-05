@@ -3,7 +3,7 @@ import random
 import game_logic
 
 app = Flask(__name__)
-app.json.sort_keys = False
+# app.json.sort_keys = False
 app.secret_key = 'your_secret_key'
 
 games = {}
@@ -68,7 +68,7 @@ def transaction():
         if not(state["shopping_cart"]["buy"]) and (state["shopping_cart"]["amount"] > state["trench"][state["shopping_cart"]["item_name"]]):
             return jsonify({"status": "error", "message": "transaction data invalid or missing"}), 400
         state = game_logic.transaction(state)
-        return jsonify({"status": "success", "money": state["money"], "trench": state["trench"], "item_arr": state["item_arr"]}), 200
+        return jsonify({"status": "success", "money": state["money"], "trench": state["trench"], "item_arr": state["item_arr"], "jet_data": state["jet_data"]}), 200
     else:
         return jsonify({"status": "error", "message": "transaction data invalid or missing"}), 400
 

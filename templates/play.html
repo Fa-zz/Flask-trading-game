@@ -21,7 +21,7 @@
       <div class="container">
         {% if state.main_view == "marketplace" %}
             <p>
-                You have <span id="user-money" class="user-money">{{ state.money }}</span> on hand. You are <span class="user-debt">{{ state.debt }}</span> in debt.
+                You have <span id="user-money" class="user-money">{{ state.money }}</span> on hand and <span id="trench-space">{{ state.trench.space }}</span>/100 spaces left in your caravan.
             </p>
             <p>"Hey dude, here's the prices"</p>
             <img class="barter-img" src="{{url_for('static', filename='barter.png')}}" />
@@ -29,10 +29,11 @@
                 {% for key, value in state.jet_data.items() %}
                 <li class="item-row">
                     <div class="item-info">
-                        <h2 class="item-name">{{ key }} • <span class="item-price">{{ value }}</span></h2>
-                        <p>Owned: <span class="owned-amt">{{ state.trench[key] | default(0) }}</span>. You can buy a max of 5</p>
+                        <h2 class="item-name">{{ key }} • <span class="item-price">{{ value[0] }}</span></h2>
+                        <p>Owned: <span class="owned-amt">{{ state.trench[key] | default(0) }}</span>. You can buy a max of <span class="max-val">{{ value[1] | default(0) }}</span></p>
                     </div>
                     <form class="buy-form">
+                        <input type="hidden" name="max-buy" value="{{ value[1] }}">
                         <input type="hidden" name="item-name" value="{{ key }}">
                         <input type="number" name="amt" class="buy-amt" value="0" min="0">
                         <button class="buy-button" id="buy-button" type="button">Buy</button>
@@ -42,14 +43,20 @@
                 {% endfor %}
             </ul>
         {% elif state.main_view == "inventory" %}
-            <p>Here's your inventory. This is how many of each item you own. You have (placeholder) spaces left.</p>
+            <p>Money on hand: <span id="user-money" class="user-money">{{ state.money }}</span></p>
+            <p>You owe <span id="user-debt" class="user-debt">{{ state.debt }}</span> to the loanshark.</p>
+            <p>You have <span id="trench-space">{{ state.trench.space }}</span>/100 spaces left in your caravan.</p>
+            <p>Here's how much of each item your caravan holds.</p> 
+            <img class="barter-img" src="{{url_for('static', filename='caravan2.png')}}" />
             <ul class="item-list">
                 {% for key, value in state.trench.items() %}
+                {% if key != "space" %}
                 <li class="item-row">
                     <div class="item-info">
-                        <h2>{{ key }} • {{ value }}</h2>
+                            <h2>{{ key }} • {{ value }}</h2>
                     </div>
                 </li>
+                {% endif %}
                 {% endfor %}
             </ul>
         {% endif %}
