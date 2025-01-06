@@ -24,11 +24,16 @@ def index():
 
 @app.route('/play')
 def play():
-    if 'game_id' not in session:
-        return redirect(url_for('index'))  # Redirect to home if no game is active
-    state = games[session['game_id']]
-    state['alert_messages'].append(f"You jet to { state['locs'][state['loc']] }")
-    return render_template("play.html", state=state)
+    try:
+        state = games[session['game_id']]
+    except KeyError:
+        return redirect(url_for('index'))
+    else:
+        return render_template("play.html", state=state)
+
+    # if 'game_id' not in session:
+          # Redirect to home if no game is active
+    #state['alert_messages'].append(f"You jet to { state['locs'][state['loc']] }")
 
 @app.route('/api/start_game', methods=['GET'])
 def start_game():
@@ -41,14 +46,14 @@ def start_game():
 
 @app.route('/api/jet', methods=['POST'])
 def jet():
-    data = request.get_json()
-    loc = data.get('loc')
+    jet = request.get_json()
     state, game_id = get_state_and_id()
-    if loc is not None:
+    if jet['status'] == 'success':
         #Check if the game ID exists
         if game_id not in games:
             return jsonify({'error': 'Game not found'}), 404
-        state = game_logic.jet(state, loc)
+        # Perform jet functions and return
+        state = game_logic.jet(state, jet['loc'])
         return jsonify({"status": "success", "jet_data": state["jet_data"]}), 200
     else:
         return jsonify({"status": "error", "message": "location data missing or invalid"}), 400
@@ -77,10 +82,9 @@ def change_view():
     try:
         data = request.get_json()
         view = data.get('view')
+        state, game_id = get_state_and_id()
 
         if view is not None:
-            game_id = session['game_id']
-            state = games[game_id]
             state["main_view"] = view.lower()
             return jsonify({"status": "success", "view": state["main_view"]}), 200
         else:

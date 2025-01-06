@@ -102,6 +102,17 @@ h1 {
     cursor: not-allowed;
 }
 
+.travel-button {
+    background-color: #013220;
+    color: #d6f6d6;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
 .menu {
     text-align: center;
 }

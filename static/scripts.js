@@ -48,8 +48,8 @@ async function handlePlayButtonClick() {
     }
 }
 
-// Function to handle the play button click event
-async function handleBuyButtonClick(event) {
+// Function to handle click event on buying or selling buttons
+async function handleTransactionButtonClick(event) {
     // Get the clicked button and its parent form
     const buttonElement = event.target;
     const buttonText = event.target.textContent.trim();
@@ -57,9 +57,9 @@ async function handleBuyButtonClick(event) {
 
     // Extract the item ID, amount, and max buy val from the form
     const itemName = form.querySelector('input[name="item-name"]').value;
-    const amount = form.querySelector('input[name="amt"]').value;
-    const maxVal = form.querySelector('input[name="max-buy"]').value;
-
+    const amount = parseInt(form.querySelector('input[name="amt"]').value, 10);
+    const maxVal = parseInt(form.querySelector('input[name="max-buy"]').value, 10);
+    
     // Validate the input
     if (amount <= 0 || (buttonText == "Buy" && amount > maxVal)) {
         alert('Enter a valid amount for the transaction.');
@@ -157,6 +157,33 @@ async function handleViewButtonClick(event) {
     }
 }
 
+// Function to handle the travel button click event
+async function handleTravelButtonClick(event) {
+    try {
+        // Get the clicked button and its parent form
+        const buttonElement = event.target;
+        const form = buttonElement.closest('.travel-form');
+
+        // Get the current loc and travel-to value from the form
+        const currLoc = form.querySelector('input[name="current-loc"]').value;
+        const locName = form.querySelector('input[name="travel-to"]').value;
+
+        if (currLoc == locName) {
+            alert("You're already in " + locName + "!");
+            return;
+        }
+
+        // Send the request
+        await sendJetRequest({ loc: locName, status: "success" });
+
+        // Reload the page after successful response
+        window.location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert("You cannot travel there.");
+    }
+}
+
 // Event listener for the play button
 const playButton = document.getElementById('play-button');
 if (playButton) {
@@ -167,7 +194,15 @@ if (playButton) {
 const buyButtons = document.querySelectorAll('.buy-button');
 if (buyButtons) {
     buyButtons.forEach(button => {
-        button.addEventListener('click', handleBuyButtonClick);
+        button.addEventListener('click', handleTransactionButtonClick);
+    });
+}
+
+// Event listener for each travel button
+const travelButtons = document.querySelectorAll('.travel-button');
+if (travelButtons) {
+    travelButtons.forEach(button => {
+        button.addEventListener('click', handleTravelButtonClick);
     });
 }
 

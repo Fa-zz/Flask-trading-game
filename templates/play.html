@@ -9,7 +9,7 @@
             alert(alertMessages[i]);
         }
     </script> -->
-    <h1>{% block title %}{{ state.locs[state.loc] }}{% endblock %}</h1>
+    <h1>{% block title %}{{ state.loc }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -17,31 +17,36 @@
         <button class="view-button">Marketplace</button> 
         <span class="pipe">|</span> 
         <button class="view-button">Inventory</button>
+        <span class="pipe">|</span>
+        <button class="view-button">News</button>
+        <span class="pipe">|</span> 
+        <button class="view-button">Travel</button>
     </div>
       <div class="container">
         {% if state.main_view == "marketplace" %}
             <p>
-                You have <span id="user-money" class="user-money">{{ state.money }}</span> on hand and <span id="trench-space">{{ state.trench.space }}</span>/100 spaces left in your caravan.
+                Your caravan arrives with <span id="user-money" class="user-money">{{ state.money }}</span> on hand and <span id="trench-space">{{ state.trench.space }}</span>/100 spaces left.
             </p>
             <p>"Hey dude, here's the prices"</p>
             <img class="barter-img" src="{{url_for('static', filename='barter.png')}}" />
             <ul class="item-list">
                 {% for key, value in state.jet_data.items() %}
-                <li class="item-row">
-                    <div class="item-info">
-                        <h2 class="item-name">{{ key }} • <span class="item-price">{{ value[0] }}</span></h2>
-                        <p>Owned: <span class="owned-amt">{{ state.trench[key] | default(0) }}</span>. You can buy a max of <span class="max-val">{{ value[1] | default(0) }}</span></p>
-                    </div>
-                    <form class="buy-form">
-                        <input type="hidden" name="max-buy" value="{{ value[1] }}">
-                        <input type="hidden" name="item-name" value="{{ key }}">
-                        <input type="number" name="amt" class="buy-amt" value="0" min="0">
-                        <button class="buy-button" id="buy-button" type="button">Buy</button>
-                        <button class="buy-button" id="buy-button" type="button">Sell</button>
-                    </form>
-                </li>
+                    <li class="item-row">
+                        <div class="item-info">
+                            <h2 class="item-name">{{ key }} • <span class="item-price">{{ value[0] }}</span></h2>
+                            <p>Owned: <span class="owned-amt">{{ state.trench[key] | default(0) }}</span>. You can buy a max of <span class="max-val">{{ value[1] | default(0) }}</span></p>
+                        </div>
+                        <form class="buy-form">
+                            <input type="hidden" name="max-buy" value="{{ value[1] }}">
+                            <input type="hidden" name="item-name" value="{{ key }}">
+                            <input type="number" name="amt" class="buy-amt" value="0" min="0">
+                            <button class="buy-button" id="buy-button" type="button">Buy</button>
+                            <button class="buy-button" id="buy-button" type="button">Sell</button>
+                        </form>
+                    </li>
                 {% endfor %}
             </ul>
+
         {% elif state.main_view == "inventory" %}
             <p>Money on hand: <span id="user-money" class="user-money">{{ state.money }}</span></p>
             <p>You owe <span id="user-debt" class="user-debt">{{ state.debt }}</span> to the loanshark.</p>
@@ -50,15 +55,34 @@
             <img class="barter-img" src="{{url_for('static', filename='caravan2.png')}}" />
             <ul class="item-list">
                 {% for key, value in state.trench.items() %}
-                {% if key != "space" %}
-                <li class="item-row">
-                    <div class="item-info">
-                            <h2>{{ key }} • {{ value }}</h2>
-                    </div>
-                </li>
-                {% endif %}
+                    {% if key != "space" %}
+                        <li class="item-row">
+                            <div class="item-info">
+                                    <h2>{{ key }} • {{ value }}</h2>
+                            </div>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
+
+        {% elif state.main_view == "travel" %}
+            <p>Where are you travelling to?</p>
+            <img class="barter-img" src="{{url_for('static', filename='travel.png')}}" />
+            <ul class="item-list">
+                {% for loc in state.locs %}
+                    <li class="item-row">
+                        <div class="item-info">
+                                <h2>{{ loc }}</h2>
+                        </div>
+                        <form class="travel-form">
+                            <input type="hidden" name="current-loc" value="{{ state.loc }}">
+                            <input type="hidden" name="travel-to" value="{{ loc }}">
+                            <button class="travel-button" id="travel-button" type="button">Travel</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+
         {% endif %}
     </div>
 

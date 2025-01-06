@@ -15,7 +15,6 @@ class JetData:
         }
 
     def get_data(self):
-        print(f"Backend prices: {self.prices}")
         return self.prices
     
     # Helper function
@@ -37,11 +36,10 @@ class JetData:
             self.prices[f"{item_name}"][1] = self.find_greatest_quotient_within_limit(user_money, self.prices[item_name][0], trench_space)
     
 def start_game():
-    inv = {
+    state = {
         "money": 2_000, 
         "debt": 5_000, 
-        "loc": 0,
-        "locs": ["Badsprings City", "Prim City", "Vault 19", "The Wasteland", "Hooper Dam", "New Venturas"],
+        "locs": ["Badsprings City", "Prim City", "Bunker 2319", "Wasteland Radio", "Hooper Dam", "New Venturas"],
         "item_arr": ITEMS,
         "trench": {item: 0 for item in ITEMS},
         "shopping_cart": {},
@@ -49,8 +47,9 @@ def start_game():
         "alert_messages": [],
         "main_view": "marketplace"
     }
-    inv["trench"]["space"] = 100
-    return inv
+    state["trench"]["space"] = 100
+    state["loc"] = state["locs"][0]
+    return state
 
 def jet(game_state, loc):
     game_state["loc"] = loc
@@ -59,11 +58,11 @@ def jet(game_state, loc):
         jet_data.set_max_buy_vals(item_name, game_state["money"], game_state["trench"]["space"])
     game_state["jet_data"] = jet_data.get_data()
     game_state["jet_data_obj"] = jet_data
+    game_state["main_view"] = "marketplace"
     print(f"Backend jet data: {game_state['jet_data']}")
     return game_state
 
 def transaction(state):
-    print(f"Transaction state: {state}")
     str_buying = state["shopping_cart"]["item_name"] # Str of bought item
     price = state["jet_data"][str_buying][0] # Price of bought item
     total = price * state["shopping_cart"]["amount"] # Total = price * amount
@@ -72,17 +71,19 @@ def transaction(state):
     if state["shopping_cart"]["buy"] == True:
         state["money"] -= total # Player gives up money to acquire commodity
         state["trench"][str_buying] += state["shopping_cart"]["amount"] # Update trench with amount bought
-        state["trench"]["space"] -= state["trench"][str_buying] # Update trench space with amount bought
+        state["trench"]["space"] -= state["shopping_cart"]["amount"] # Update trench space with amount bought
     
     # If selling commodity
     elif state["shopping_cart"]["buy"] == False:
         state["money"] += total # Player gives up money to part with commodity
         state["trench"][str_buying] -= state["shopping_cart"]["amount"]
-        state["trench"]["space"] += state["trench"][str_buying] # Update trench space with amount sold
+        state["trench"]["space"] += state["shopping_cart"]["amount"] # Update trench space with amount sold
 
     # Update max buy vals
     for item_name in state["item_arr"]:
         state["jet_data_obj"].set_max_buy_vals(item_name, state["money"], state["trench"]["space"])
     state["jet_data"] = state["jet_data_obj"].get_data()
+
+    print(f"Post-Transaction state: {state}")
 
     return state
